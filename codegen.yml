@@ -1,0 +1,11 @@
+overwrite: true
+schema: "https://api.hashnode.com/"
+documents:
+  - "src/graphql/queries.graphql"
+  - "src/graphql/mutations.graphql"
+generates:
+  src/graphql/generated.tsx:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"

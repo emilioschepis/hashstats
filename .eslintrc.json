@@ -7,5 +7,6 @@
         "project": "./tsconfig.json"
       }
     }
-  ]
+  ],
+  "ignorePatterns": ["src/graphql/generated.tsx"]
 }

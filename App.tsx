@@ -7,6 +7,7 @@ import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { ActivityIndicator, View } from "react-native";
 
+import { UsernameProvider } from "./src/context/UsernameContext";
 import client from "./src/graphql/client";
 import TabNavigator from "./src/navigation/TabNavigator";
 import CommonStyles from "./src/styles/CommonStyles";
@@ -32,8 +33,10 @@ const App = () => {
   return (
     <ApolloProvider client={client}>
       <NavigationContainer theme={NavigationTheme}>
-        <StatusBar style="auto" />
-        <TabNavigator />
+        <UsernameProvider>
+          <StatusBar style="auto" />
+          <TabNavigator />
+        </UsernameProvider>
       </NavigationContainer>
     </ApolloProvider>
   );

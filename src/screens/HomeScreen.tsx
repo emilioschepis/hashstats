@@ -5,33 +5,33 @@ import Animated, { runOnJS, useAnimatedScrollHandler, useAnimatedStyle, useShare
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import PostsList from "../components/PostsList";
-import UserHeader from "../components/UserHeader";
+import UserHeader, { MAX_HEADER_HEIGHT, MIN_HEADER_HEIGHT } from "../components/UserHeader";
+import { useUsername } from "../context/UsernameContext";
 import { usePostsQuery } from "../graphql/generated";
 import CommonStyles from "../styles/CommonStyles";
 import { clamp } from "../utils/animationUtils";
 
-const MAX_HEADER_HEIGHT = 180;
-
 const HomeScreen = () => {
+  const { username } = useUsername();
   const insets = useSafeAreaInsets();
 
   const offsetY = useSharedValue(0);
-  const { loading, data } = usePostsQuery({ variables: { username: "emilioschepis" } });
+  const { loading, data } = usePostsQuery({ variables: { username: username ?? "" }, skip: !username });
   const [statusBarStyle, setStatusBarStyle] = useState<"light" | "auto">("light");
 
+  console.log(insets.top);
+
   const headerStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: -offsetY.value }],
+    transform: [{ translateY: -clamp(offsetY.value, 0, MAX_HEADER_HEIGHT - MIN_HEADER_HEIGHT - insets.top) }],
   }));
 
   const listStyle = useAnimatedStyle(() => ({
-    paddingTop: MAX_HEADER_HEIGHT - offsetY.value,
+    paddingTop: clamp(MAX_HEADER_HEIGHT - offsetY.value, MIN_HEADER_HEIGHT + insets.top, MAX_HEADER_HEIGHT),
   }));
 
   const handleScroll = useAnimatedScrollHandler({
     onScroll: (event) => {
-      const value = clamp(event.contentOffset.y, 0, MAX_HEADER_HEIGHT - insets.top - 56);
-      offsetY.value = value;
-
+      offsetY.value = event.contentOffset.y;
       const style = event.contentOffset.y > 100 ? "auto" : "light";
       runOnJS(setStatusBarStyle)(style);
     },

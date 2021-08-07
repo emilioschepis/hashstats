@@ -1,7 +1,11 @@
+import { Ionicons } from "@expo/vector-icons";
+import { useTheme } from "@react-navigation/native";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, { interpolate, useAnimatedStyle } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { useUsername } from "../context/UsernameContext";
 import { PostsQuery } from "../graphql/generated";
 
 type User = PostsQuery["user"];
@@ -11,24 +15,43 @@ export type UserHeaderProps = {
   offsetY: Animated.SharedValue<number>;
 };
 
+export const MAX_HEADER_HEIGHT = 200;
+export const MIN_HEADER_HEIGHT = 56;
+
 const UserHeader = ({ user, offsetY }: UserHeaderProps) => {
+  const theme = useTheme();
+  const insets = useSafeAreaInsets();
+  const { resetUsername } = useUsername();
+
   const textContainerStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(offsetY.value, [0, 100], [1, 0]),
+    opacity: interpolate(offsetY.value, [0, MIN_HEADER_HEIGHT + insets.top], [1, 0]),
   }));
 
   const closedTextContainerStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(offsetY.value, [90, 100], [0, 1]),
+    opacity: interpolate(offsetY.value, [MIN_HEADER_HEIGHT, MIN_HEADER_HEIGHT + insets.top], [0, 1]),
   }));
+
+  const handlePress = () => {
+    resetUsername?.();
+  };
 
   return (
     <View style={styles.container}>
+      <View style={[{ top: insets.top + 8 }, styles.changeUsernameContainer]}>
+        <Pressable style={({ pressed }) => ({ opacity: pressed ? 0.3 : 1.0 })} onPress={handlePress}>
+          <View style={[{ backgroundColor: theme.colors.primary }, styles.changeUsernameContent]}>
+            <Text style={styles.changeUsernameText}>Change username</Text>
+            <Ionicons name="exit" color="white" size={18} />
+          </View>
+        </Pressable>
+      </View>
       <Animated.View style={[textContainerStyle, styles.textContainer]}>
         <Animated.Image
           source={user?.coverImage ? { uri: user.coverImage } : require("../../assets/default-cover.jpeg")}
           style={StyleSheet.absoluteFill}
         />
         <Text style={styles.welcomeText}>Hello, {user?.name}</Text>
-        <Text style={styles.taglineText}>Here are your posts and their current levels of engagement</Text>
+        <Text style={styles.taglineText}>Here are your posts and their current levels of engagement.</Text>
       </Animated.View>
       <Animated.View style={[closedTextContainerStyle, styles.closedTextContainer]}>
         <Text style={styles.closedText}>{user?.name}</Text>
@@ -56,6 +79,18 @@ const styles = StyleSheet.create({
     borderBottomColor: "rgb(229, 231, 235)",
     borderBottomWidth: 2,
   },
+  changeUsernameContainer: {
+    position: "absolute",
+    right: 16,
+    zIndex: 3,
+  },
+  changeUsernameContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 8,
+    borderRadius: 4,
+  },
   welcomeText: {
     fontSize: 24,
     fontFamily: "Inter_900Black",
@@ -64,6 +99,7 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
     paddingRight: 2,
+    marginBottom: 4,
   },
   taglineText: {
     fontSize: 18,
@@ -81,6 +117,13 @@ const styles = StyleSheet.create({
     fontFamily: "Inter_600SemiBold",
     color: "#333333",
     textAlign: "center",
+  },
+  changeUsernameText: {
+    fontSize: 14,
+    fontFamily: "Inter_600SemiBold",
+    color: "white",
+    textShadowColor: "#333",
+    paddingRight: 4,
   },
 });
 

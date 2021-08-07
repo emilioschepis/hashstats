@@ -51,7 +51,12 @@ const UserHeader = ({ user, offsetY }: UserHeaderProps) => {
           style={StyleSheet.absoluteFill}
         />
         <Text style={styles.welcomeText}>Hello, {user?.name}</Text>
-        <Text style={styles.taglineText}>Here are your posts and their current levels of engagement.</Text>
+        <View style={styles.statsRow}>
+          <Ionicons name="people" color="white" size={18} />
+          <Text style={styles.statsText}>{user?.numFollowers} followers</Text>
+          <Ionicons name="thumbs-up" color="white" size={18} />
+          <Text style={styles.statsText}>{user?.numReactions ?? 0} total reactions</Text>
+        </View>
       </Animated.View>
       <Animated.View style={[closedTextContainerStyle, styles.closedTextContainer]}>
         <Text style={styles.closedText}>{user?.name}</Text>
@@ -91,6 +96,10 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 4,
   },
+  statsRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   welcomeText: {
     fontSize: 24,
     fontFamily: "Inter_900Black",
@@ -101,7 +110,7 @@ const styles = StyleSheet.create({
     paddingRight: 2,
     marginBottom: 4,
   },
-  taglineText: {
+  statsText: {
     fontSize: 18,
     fontFamily: "Inter_600SemiBold",
     color: "white",
@@ -109,6 +118,7 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
     paddingRight: 2,
+    marginHorizontal: 4,
   },
   closedText: {
     height: 24,

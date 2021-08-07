@@ -23,13 +23,13 @@ const PostItem = ({ post }: PostItemProps) => {
         <Text style={styles.titleText}>{post?.title}</Text>
         <Text style={styles.timeAgoText}>Posted {timeAgo}</Text>
         <View style={styles.engagementContainer}>
-          <View style={[{ backgroundColor: theme.colors.primary }, styles.reactionsContainer]}>
-            <Ionicons name="thumbs-up" color="white" size={18} />
-            <Text style={styles.reactionsText}>{post?.totalReactions}</Text>
+          <View style={styles.reactionsContainer}>
+            <Ionicons name="thumbs-up" color={theme.colors.primary} size={18} />
+            <Text style={[{ color: theme.colors.primary }, styles.reactionsText]}>{post?.totalReactions}</Text>
           </View>
-          <View style={[{ backgroundColor: theme.colors.primary }, styles.commentsContainer]}>
-            <Ionicons name="chatbubbles" color="white" size={18} />
-            <Text style={styles.reactionsText}>{post?.responseCount}</Text>
+          <View style={styles.commentsContainer}>
+            <Ionicons name="chatbubbles" color={theme.colors.primary} size={18} />
+            <Text style={[{ color: theme.colors.primary }, styles.commentsText]}>{post?.responseCount}</Text>
           </View>
         </View>
       </View>
@@ -60,6 +60,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "baseline",
     borderRadius: 4,
+    borderColor: "rgb(229, 231, 235)",
+    borderWidth: 2,
   },
   commentsContainer: {
     marginLeft: 4,
@@ -68,6 +70,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "baseline",
     borderRadius: 4,
+    borderColor: "rgb(229, 231, 235)",
+    borderWidth: 2,
   },
   titleText: {
     fontSize: 18,
@@ -83,13 +87,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: "Inter_900Black",
     marginLeft: 4,
-    color: "white",
   },
   commentsText: {
     fontSize: 18,
     fontFamily: "Inter_900Black",
     marginLeft: 4,
-    color: "white",
   },
 });
 

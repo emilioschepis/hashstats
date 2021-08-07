@@ -8,7 +8,7 @@ const Stack = createNativeStackNavigator();
 const HomeNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="HomeNavigator" component={HomeScreen} />
+      <Stack.Screen name="Home" component={HomeScreen} />
     </Stack.Navigator>
   );
 };

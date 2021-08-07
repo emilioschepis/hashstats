@@ -612,13 +612,14 @@ export type PostsQueryVariables = Exact<{
 }>;
 
 
-export type PostsQuery = { __typename?: 'Query', user?: Maybe<{ __typename?: 'User', name?: Maybe<string>, publication?: Maybe<{ __typename?: 'Publication', title?: Maybe<string>, posts?: Maybe<Array<Maybe<{ __typename?: 'Post', _id: string, title?: Maybe<string>, dateAdded?: Maybe<string>, coverImage: string, totalReactions?: Maybe<number>, responseCount?: Maybe<number> }>>> }> }> };
+export type PostsQuery = { __typename?: 'Query', user?: Maybe<{ __typename?: 'User', name?: Maybe<string>, coverImage?: Maybe<string>, publication?: Maybe<{ __typename?: 'Publication', title?: Maybe<string>, posts?: Maybe<Array<Maybe<{ __typename?: 'Post', _id: string, title?: Maybe<string>, dateAdded?: Maybe<string>, coverImage: string, totalReactions?: Maybe<number>, responseCount?: Maybe<number> }>>> }> }> };
 
 
 export const PostsDocument = gql`
     query Posts($username: String!) {
   user(username: $username) {
     name
+    coverImage
     publication {
       title
       posts {

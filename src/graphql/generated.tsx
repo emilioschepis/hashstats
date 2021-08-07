@@ -607,46 +607,57 @@ export type IsRepublished = {
   originalArticleURL: Scalars['String'];
 };
 
-export type UserQueryVariables = Exact<{
+export type PostsQueryVariables = Exact<{
   username: Scalars['String'];
 }>;
 
 
-export type UserQuery = { __typename?: 'Query', user?: Maybe<{ __typename?: 'User', name?: Maybe<string> }> };
+export type PostsQuery = { __typename?: 'Query', user?: Maybe<{ __typename?: 'User', name?: Maybe<string>, publication?: Maybe<{ __typename?: 'Publication', title?: Maybe<string>, posts?: Maybe<Array<Maybe<{ __typename?: 'Post', _id: string, title?: Maybe<string>, dateAdded?: Maybe<string>, coverImage: string, totalReactions?: Maybe<number>, responseCount?: Maybe<number> }>>> }> }> };
 
 
-export const UserDocument = gql`
-    query User($username: String!) {
+export const PostsDocument = gql`
+    query Posts($username: String!) {
   user(username: $username) {
     name
+    publication {
+      title
+      posts {
+        _id
+        title
+        dateAdded
+        coverImage
+        totalReactions
+        responseCount
+      }
+    }
   }
 }
     `;
 
 /**
- * __useUserQuery__
+ * __usePostsQuery__
  *
- * To run a query within a React component, call `useUserQuery` and pass it any options that fit your needs.
- * When your component renders, `useUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `usePostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useUserQuery({
+ * const { data, loading, error } = usePostsQuery({
  *   variables: {
  *      username: // value for 'username'
  *   },
  * });
  */
-export function useUserQuery(baseOptions: Apollo.QueryHookOptions<UserQuery, UserQueryVariables>) {
+export function usePostsQuery(baseOptions: Apollo.QueryHookOptions<PostsQuery, PostsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<UserQuery, UserQueryVariables>(UserDocument, options);
+        return Apollo.useQuery<PostsQuery, PostsQueryVariables>(PostsDocument, options);
       }
-export function useUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserQuery, UserQueryVariables>) {
+export function usePostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PostsQuery, PostsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<UserQuery, UserQueryVariables>(UserDocument, options);
+          return Apollo.useLazyQuery<PostsQuery, PostsQueryVariables>(PostsDocument, options);
         }
-export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
-export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
-export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;
+export type PostsQueryHookResult = ReturnType<typeof usePostsQuery>;
+export type PostsLazyQueryHookResult = ReturnType<typeof usePostsLazyQuery>;
+export type PostsQueryResult = Apollo.QueryResult<PostsQuery, PostsQueryVariables>;

@@ -1,4 +1,27 @@
 {
+  "Component": {
+    "scope": "typescriptreact",
+    "prefix": "rc",
+    "body": [
+      "import React from \"react\";",
+      "import { StyleSheet, View } from \"react-native\";",
+      "",
+      "export type ${1:$TM_FILENAME_BASE}Props = {};",
+      "",
+      "const ${1} = ({}: ${1}Props) => {",
+      "  return <View style={styles.container} />;",
+      "};",
+      "",
+      "const styles = StyleSheet.create({",
+      "  container: {",
+      "    flex: 1,",
+      "  },",
+      "});",
+      "",
+      "export default ${1};",
+      ""
+    ]
+  },
   "Screen": {
     "scope": "typescriptreact",
     "prefix": "rs",

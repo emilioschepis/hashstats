@@ -1,5 +1,16 @@
-query User($username: String!) {
+query Posts($username: String!) {
   user(username: $username) {
     name
+    publication {
+      title
+      posts {
+        _id
+        title
+        dateAdded
+        coverImage
+        totalReactions
+        responseCount
+      }
+    }
   }
 }

@@ -15,11 +15,14 @@ const SearchResultsScreen = () => {
   const theme = useTheme();
   const route = useRoute<ScreenRouteProp>();
   const currentPage = useRef(0);
-  const { loading, data, fetchMore, networkStatus } = usePostsQuery({
+  const canLoadMore = useRef(true);
+
+  const { data, fetchMore, networkStatus } = usePostsQuery({
     variables: { username: route.params.username },
+    notifyOnNetworkStatusChange: true,
   });
 
-  if (loading || !data) {
+  if (networkStatus === NetworkStatus.loading || !data) {
     return (
       <View style={CommonStyles.center}>
         <ActivityIndicator />
@@ -42,13 +45,16 @@ const SearchResultsScreen = () => {
       <PostsList
         posts={data.user?.publication?.posts ?? []}
         onScroll={() => {}}
-        onEndReached={() => {
-          if (networkStatus !== NetworkStatus.fetchMore) {
-            fetchMore({
+        loading={networkStatus === NetworkStatus.fetchMore}
+        onEndReached={async () => {
+          if (networkStatus !== NetworkStatus.fetchMore && canLoadMore.current) {
+            const fetched = await fetchMore({
               variables: {
                 page: ++currentPage.current,
               },
             });
+
+            canLoadMore.current = (fetched.data.user?.publication?.posts?.length ?? 0) > 0;
           }
         }}
       />

@@ -1,5 +1,13 @@
 import React from "react";
-import { FlatList, FlatListProps, NativeScrollEvent, NativeSyntheticEvent, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  FlatListProps,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  StyleSheet,
+  View,
+} from "react-native";
 import Animated from "react-native-reanimated";
 
 import { PostsQuery } from "../graphql/generated";
@@ -8,6 +16,7 @@ import PostItem from "./PostItem";
 type Posts = NonNullable<NonNullable<NonNullable<PostsQuery["user"]>["publication"]>["posts"]>;
 
 export type PostsListProps = {
+  loading?: boolean;
   posts: Posts;
   onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
   onEndReached: () => void;
@@ -19,7 +28,7 @@ const Separator = () => {
   return <View style={styles.separator} />;
 };
 
-const PostsList = ({ posts, onScroll, onEndReached }: PostsListProps) => {
+const PostsList = ({ loading = false, posts, onScroll, onEndReached }: PostsListProps) => {
   return (
     <View style={styles.container}>
       <AnimatedFlatList
@@ -28,6 +37,8 @@ const PostsList = ({ posts, onScroll, onEndReached }: PostsListProps) => {
         renderItem={({ item }) => <PostItem post={item} />}
         contentContainerStyle={styles.contentContainer}
         ItemSeparatorComponent={Separator}
+        ListFooterComponent={loading ? ActivityIndicator : React.Fragment}
+        ListFooterComponentStyle={styles.footer}
         scrollEventThrottle={1}
         onScroll={onScroll}
         onEndReached={onEndReached}
@@ -46,6 +57,9 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: 8,
+  },
+  footer: {
+    padding: 16,
   },
 });
 

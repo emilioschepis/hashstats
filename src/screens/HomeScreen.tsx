@@ -15,11 +15,13 @@ const HomeScreen = () => {
   const { username } = useUsername();
   const insets = useSafeAreaInsets();
   const currentPage = useRef(0);
+  const canLoadMore = useRef(true);
 
   const offsetY = useSharedValue(0);
-  const { loading, data, fetchMore, networkStatus } = usePostsQuery({
+  const { data, fetchMore, networkStatus } = usePostsQuery({
     variables: { username: username ?? "" },
     skip: !username,
+    notifyOnNetworkStatusChange: true,
   });
 
   const headerStyle = useAnimatedStyle(() => ({
@@ -36,7 +38,7 @@ const HomeScreen = () => {
     },
   });
 
-  if (loading || !data) {
+  if (networkStatus === NetworkStatus.loading || !data) {
     return (
       <View style={CommonStyles.center}>
         <ActivityIndicator />
@@ -53,13 +55,16 @@ const HomeScreen = () => {
         <PostsList
           posts={data.user?.publication?.posts ?? []}
           onScroll={handleScroll}
-          onEndReached={() => {
-            if (networkStatus !== NetworkStatus.fetchMore) {
-              fetchMore({
+          loading={networkStatus === NetworkStatus.fetchMore}
+          onEndReached={async () => {
+            if (networkStatus !== NetworkStatus.fetchMore && canLoadMore.current) {
+              const fetched = await fetchMore({
                 variables: {
                   page: ++currentPage.current,
                 },
               });
+
+              canLoadMore.current = (fetched.data.user?.publication?.posts?.length ?? 0) > 0;
             }
           }}
         />

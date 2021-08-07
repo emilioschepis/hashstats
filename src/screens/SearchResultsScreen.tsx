@@ -1,3 +1,4 @@
+import { NetworkStatus } from "@apollo/client";
 import { Ionicons } from "@expo/vector-icons";
 import { RouteProp, useRoute, useTheme } from "@react-navigation/native";
 import React, { useRef } from "react";
@@ -14,7 +15,9 @@ const SearchResultsScreen = () => {
   const theme = useTheme();
   const route = useRoute<ScreenRouteProp>();
   const currentPage = useRef(0);
-  const { loading, data, fetchMore } = usePostsQuery({ variables: { username: route.params.username } });
+  const { loading, data, fetchMore, networkStatus } = usePostsQuery({
+    variables: { username: route.params.username },
+  });
 
   if (loading || !data) {
     return (
@@ -39,13 +42,15 @@ const SearchResultsScreen = () => {
       <PostsList
         posts={data.user?.publication?.posts ?? []}
         onScroll={() => {}}
-        onEndReached={() =>
-          fetchMore({
-            variables: {
-              page: ++currentPage.current,
-            },
-          })
-        }
+        onEndReached={() => {
+          if (networkStatus !== NetworkStatus.fetchMore) {
+            fetchMore({
+              variables: {
+                page: ++currentPage.current,
+              },
+            });
+          }
+        }}
       />
     </View>
   );

@@ -1,3 +1,4 @@
+import { NetworkStatus } from "@apollo/client";
 import React, { useRef } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import Animated, { useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
@@ -16,7 +17,7 @@ const HomeScreen = () => {
   const currentPage = useRef(0);
 
   const offsetY = useSharedValue(0);
-  const { loading, data, fetchMore } = usePostsQuery({
+  const { loading, data, fetchMore, networkStatus } = usePostsQuery({
     variables: { username: username ?? "" },
     skip: !username,
   });
@@ -52,13 +53,15 @@ const HomeScreen = () => {
         <PostsList
           posts={data.user?.publication?.posts ?? []}
           onScroll={handleScroll}
-          onEndReached={() =>
-            fetchMore({
-              variables: {
-                page: ++currentPage.current,
-              },
-            })
-          }
+          onEndReached={() => {
+            if (networkStatus !== NetworkStatus.fetchMore) {
+              fetchMore({
+                variables: {
+                  page: ++currentPage.current,
+                },
+              });
+            }
+          }}
         />
       </Animated.View>
     </View>

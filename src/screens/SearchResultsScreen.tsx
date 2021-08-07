@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { RouteProp, useRoute, useTheme } from "@react-navigation/native";
-import React from "react";
+import React, { useRef } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
 import PostsList from "../components/PostsList";
@@ -13,7 +13,8 @@ type ScreenRouteProp = RouteProp<SearchNavigatorParamList, "SearchResults">;
 const SearchResultsScreen = () => {
   const theme = useTheme();
   const route = useRoute<ScreenRouteProp>();
-  const { loading, data } = usePostsQuery({ variables: { username: route.params.username } });
+  const currentPage = useRef(0);
+  const { loading, data, fetchMore } = usePostsQuery({ variables: { username: route.params.username } });
 
   if (loading || !data) {
     return (
@@ -35,7 +36,17 @@ const SearchResultsScreen = () => {
           <Text style={styles.infoText}>{data.user?.numReactions ?? 0} total reactions</Text>
         </View>
       </View>
-      <PostsList posts={data.user?.publication?.posts ?? []} onScroll={() => {}} />
+      <PostsList
+        posts={data.user?.publication?.posts ?? []}
+        onScroll={() => {}}
+        onEndReached={() =>
+          fetchMore({
+            variables: {
+              page: ++currentPage.current,
+            },
+          })
+        }
+      />
     </View>
   );
 };

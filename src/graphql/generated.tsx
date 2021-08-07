@@ -609,6 +609,7 @@ export type IsRepublished = {
 
 export type PostsQueryVariables = Exact<{
   username: Scalars['String'];
+  page?: Scalars['Int'];
 }>;
 
 
@@ -616,7 +617,7 @@ export type PostsQuery = { __typename?: 'Query', user?: Maybe<{ __typename?: 'Us
 
 
 export const PostsDocument = gql`
-    query Posts($username: String!) {
+    query Posts($username: String!, $page: Int! = 0) {
   user(username: $username) {
     name
     coverImage
@@ -624,7 +625,7 @@ export const PostsDocument = gql`
     numReactions
     publication {
       title
-      posts {
+      posts(page: $page) {
         _id
         title
         dateAdded
@@ -650,6 +651,7 @@ export const PostsDocument = gql`
  * const { data, loading, error } = usePostsQuery({
  *   variables: {
  *      username: // value for 'username'
+ *      page: // value for 'page'
  *   },
  * });
  */

@@ -10,6 +10,7 @@ type Posts = NonNullable<NonNullable<NonNullable<PostsQuery["user"]>["publicatio
 export type PostsListProps = {
   posts: Posts;
   onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
+  onEndReached: () => void;
 };
 
 const AnimatedFlatList = Animated.createAnimatedComponent<FlatListProps<Posts[number]>>(FlatList);
@@ -18,7 +19,7 @@ const Separator = () => {
   return <View style={styles.separator} />;
 };
 
-const PostsList = ({ posts, onScroll }: PostsListProps) => {
+const PostsList = ({ posts, onScroll, onEndReached }: PostsListProps) => {
   return (
     <View style={styles.container}>
       <AnimatedFlatList
@@ -29,6 +30,8 @@ const PostsList = ({ posts, onScroll }: PostsListProps) => {
         ItemSeparatorComponent={Separator}
         scrollEventThrottle={1}
         onScroll={onScroll}
+        onEndReached={onEndReached}
+        onEndReachedThreshold={0.3}
       />
     </View>
   );

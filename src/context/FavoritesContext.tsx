@@ -88,7 +88,6 @@ export const FavoritesProvider = ({ children }: { children: React.ReactNode }) =
 
   useEffect(() => {
     if (!state.loading) {
-      console.log("Saving", state.favorites);
       AsyncStorage.setItem("@favorites", state.favorites.join(";"));
     }
   }, [state]);

@@ -1,4 +1,4 @@
-query Posts($username: String!) {
+query Posts($username: String!, $page: Int! = 0) {
   user(username: $username) {
     name
     coverImage
@@ -6,7 +6,7 @@ query Posts($username: String!) {
     numReactions
     publication {
       title
-      posts {
+      posts(page: $page) {
         _id
         title
         dateAdded

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import Animated, { useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -13,9 +13,13 @@ import { clamp } from "../utils/animationUtils";
 const HomeScreen = () => {
   const { username } = useUsername();
   const insets = useSafeAreaInsets();
+  const currentPage = useRef(0);
 
   const offsetY = useSharedValue(0);
-  const { loading, data } = usePostsQuery({ variables: { username: username ?? "" }, skip: !username });
+  const { loading, data, fetchMore } = usePostsQuery({
+    variables: { username: username ?? "" },
+    skip: !username,
+  });
 
   const headerStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: -clamp(offsetY.value, 0, MAX_HEADER_HEIGHT - MIN_HEADER_HEIGHT - insets.top) }],
@@ -45,7 +49,17 @@ const HomeScreen = () => {
         <UserHeader user={data.user} offsetY={offsetY} />
       </Animated.View>
       <Animated.View style={listStyle}>
-        <PostsList posts={data.user?.publication?.posts ?? []} onScroll={handleScroll} />
+        <PostsList
+          posts={data.user?.publication?.posts ?? []}
+          onScroll={handleScroll}
+          onEndReached={() =>
+            fetchMore({
+              variables: {
+                page: ++currentPage.current,
+              },
+            })
+          }
+        />
       </Animated.View>
     </View>
   );

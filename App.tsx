@@ -7,6 +7,7 @@ import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { ActivityIndicator, View } from "react-native";
 
+import { FavoritesProvider } from "./src/context/FavoritesContext";
 import { UsernameProvider } from "./src/context/UsernameContext";
 import client from "./src/graphql/client";
 import TabNavigator from "./src/navigation/TabNavigator";
@@ -34,8 +35,10 @@ const App = () => {
     <ApolloProvider client={client}>
       <NavigationContainer theme={NavigationTheme}>
         <UsernameProvider>
-          <StatusBar style="auto" />
-          <TabNavigator />
+          <FavoritesProvider>
+            <StatusBar style="auto" />
+            <TabNavigator />
+          </FavoritesProvider>
         </UsernameProvider>
       </NavigationContainer>
     </ApolloProvider>

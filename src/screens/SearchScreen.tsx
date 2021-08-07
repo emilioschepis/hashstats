@@ -3,6 +3,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack/lib/ty
 import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
+import FavoritesList from "../components/FavoritesList";
 import { SearchNavigatorParamList } from "../navigation/SearchNavigator";
 
 type NavigationProp = NativeStackNavigationProp<SearchNavigatorParamList, "Search">;
@@ -12,10 +13,16 @@ const SearchScreen = () => {
   const navigation = useNavigation<NavigationProp>();
   const [searchText, setSearchText] = useState("");
 
-  const searchEnabled = searchText.trim().length > 0;
-
   const handleSearch = () => {
+    if (searchText.trim().length === 0) {
+      return;
+    }
+
     navigation.navigate("SearchResults", { username: searchText.toLowerCase() });
+  };
+
+  const handleSelect = (username: string) => {
+    navigation.navigate("SearchResults", { username });
   };
 
   return (
@@ -28,16 +35,13 @@ const SearchScreen = () => {
           style={[{ borderColor: theme.colors.primary }, styles.searchInput]}
           placeholder="Username"
         />
-        <Pressable
-          disabled={!searchEnabled}
-          onPress={handleSearch}
-          style={({ pressed }) => ({ opacity: pressed ? 0.3 : 1.0 })}
-        >
-          <View style={[{ backgroundColor: searchEnabled ? theme.colors.primary : "gray" }, styles.searchButton]}>
+        <Pressable onPress={handleSearch} style={({ pressed }) => ({ opacity: pressed ? 0.3 : 1.0 })}>
+          <View style={[{ backgroundColor: theme.colors.primary }, styles.searchButton]}>
             <Text style={styles.searchButtonText}>Search</Text>
           </View>
         </Pressable>
       </View>
+      <FavoritesList onSelect={handleSelect} />
     </View>
   );
 };
@@ -47,7 +51,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   searchContainer: {
-    padding: 16,
+    paddingTop: 16,
+    paddingHorizontal: 16,
   },
   searchText: {
     fontSize: 18,

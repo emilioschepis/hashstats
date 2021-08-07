@@ -46,6 +46,8 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     padding: 16,
+    borderBottomColor: "rgb(229, 231, 235)",
+    borderBottomWidth: 2,
   },
   infoRow: {
     flexDirection: "row",

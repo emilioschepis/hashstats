@@ -1,7 +1,6 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
-import Animated, { runOnJS, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import Animated, { useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import PostsList from "../components/PostsList";
@@ -17,9 +16,6 @@ const HomeScreen = () => {
 
   const offsetY = useSharedValue(0);
   const { loading, data } = usePostsQuery({ variables: { username: username ?? "" }, skip: !username });
-  const [statusBarStyle, setStatusBarStyle] = useState<"light" | "auto">("light");
-
-  console.log(insets.top);
 
   const headerStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: -clamp(offsetY.value, 0, MAX_HEADER_HEIGHT - MIN_HEADER_HEIGHT - insets.top) }],
@@ -32,8 +28,6 @@ const HomeScreen = () => {
   const handleScroll = useAnimatedScrollHandler({
     onScroll: (event) => {
       offsetY.value = event.contentOffset.y;
-      const style = event.contentOffset.y > 100 ? "auto" : "light";
-      runOnJS(setStatusBarStyle)(style);
     },
   });
 
@@ -47,7 +41,6 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar style={statusBarStyle} />
       <Animated.View style={[headerStyle, styles.headerContainer]}>
         <UserHeader user={data.user} offsetY={offsetY} />
       </Animated.View>

@@ -612,7 +612,7 @@ export type PostsQueryVariables = Exact<{
 }>;
 
 
-export type PostsQuery = { __typename?: 'Query', user?: Maybe<{ __typename?: 'User', name?: Maybe<string>, coverImage?: Maybe<string>, publication?: Maybe<{ __typename?: 'Publication', title?: Maybe<string>, posts?: Maybe<Array<Maybe<{ __typename?: 'Post', _id: string, title?: Maybe<string>, dateAdded?: Maybe<string>, coverImage: string, totalReactions?: Maybe<number>, responseCount?: Maybe<number> }>>> }> }> };
+export type PostsQuery = { __typename?: 'Query', user?: Maybe<{ __typename?: 'User', name?: Maybe<string>, coverImage?: Maybe<string>, numFollowers?: Maybe<number>, numReactions?: Maybe<number>, publication?: Maybe<{ __typename?: 'Publication', title?: Maybe<string>, posts?: Maybe<Array<Maybe<{ __typename?: 'Post', _id: string, title?: Maybe<string>, dateAdded?: Maybe<string>, coverImage: string, totalReactions?: Maybe<number>, responseCount?: Maybe<number> }>>> }> }> };
 
 
 export const PostsDocument = gql`
@@ -620,6 +620,8 @@ export const PostsDocument = gql`
   user(username: $username) {
     name
     coverImage
+    numFollowers
+    numReactions
     publication {
       title
       posts {

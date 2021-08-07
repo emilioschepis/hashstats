@@ -2,6 +2,8 @@ query Posts($username: String!) {
   user(username: $username) {
     name
     coverImage
+    numFollowers
+    numReactions
     publication {
       title
       posts {

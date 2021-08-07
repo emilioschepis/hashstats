@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 import dayjs from "dayjs";
 import React, { useMemo } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Dimensions, Image, PixelRatio, StyleSheet, Text, View } from "react-native";
 
 import { PostsQuery } from "../graphql/generated";
 
@@ -16,9 +16,12 @@ const PostItem = ({ post }: PostItemProps) => {
   const theme = useTheme();
   const timeAgo = useMemo(() => dayjs(post?.dateAdded).fromNow(), [post?.dateAdded]);
 
+  const coverImageWidth = PixelRatio.getPixelSizeForLayoutSize(Dimensions.get("screen").width);
+  const coverImageUri = post?.coverImage ? `${post.coverImage}?w=${coverImageWidth}` : undefined;
+
   return (
     <View style={styles.container}>
-      <Image source={{ uri: post?.coverImage, height: 64 }} />
+      <Image source={{ uri: coverImageUri, height: 64 }} defaultSource={require("../../assets/placeholder.jpeg")} />
       <View style={styles.contentContainer}>
         <Text style={styles.titleText}>{post?.title}</Text>
         <Text style={styles.timeAgoText}>Posted {timeAgo}</Text>

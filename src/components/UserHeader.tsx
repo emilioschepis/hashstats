@@ -47,6 +47,7 @@ const UserHeader = ({ user, offsetY }: UserHeaderProps) => {
       </View>
       <Animated.View style={[textContainerStyle, styles.textContainer]}>
         <Animated.Image
+          defaultSource={require("../../assets/placeholder.jpeg")}
           source={user?.coverImage ? { uri: user.coverImage } : require("../../assets/default-cover.jpeg")}
           style={StyleSheet.absoluteFill}
         />
